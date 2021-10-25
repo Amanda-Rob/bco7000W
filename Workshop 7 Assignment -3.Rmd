@@ -1,0 +1,100 @@
+---
+title: "Workshop 7 - assignment 3"
+author: "Amanda Roberts"
+date: "25/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(skimr)
+```
+
+## Data set exploration and identifying a business problem (= main question yo solve)
+
+```{r}
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+
+```
+
+**Question**: How can i predict the rating of coffee? (= what factors affect its rating=quality?)
+
+**Subquestions**:
+
+Does altitude affect quality?
+
+Does the place of origin affect its rating (country?, Far?, Owner?)
+
+Are all robusta beans rated low?
+
+What are most acidic coffee beans?
+
+Let's look at data
+
+```{r}
+skim(coffee_ratings)
+```
+
+Lets look at the ratings boxplot
+
+```{r}
+coffee_ratings%>%ggplot(
+  aes(total_cup_points)
+)+
+  geom_boxplot()
+
+coffee_ratings_clean<-coffee_ratings%>%filter(total_cup_points>69)
+
+coffee_ratings%>%ggplot(
+  aes(aroma)
+)+
+  geom_boxplot()
+
+```
+
+Let's explore factors
+
+```{r}
+coffee_ratings%>%count(species, sort=TRUE)
+coffee_ratings%>%count(variety, sort=TRUE)
+```
+1. `variety` should be factor!
+get rid of NA (remove observations from data set)
+2.can i lump up variety categories with low number of observations
+
+fct_lump
+
+```{r}
+coffee_ratings_clean<-coffee_ratings_clean%>%
+  mutate(variety=as_factor(variety))%>%
+filter(!is.na(variety))
+
+coffee_ratings_clean<-coffee_ratings_clean%>%
+  mutate(variety=fct_lump_n(
+    coffee_ratings_clean$variety,n=4))
+
+coffee_ratings_clean%>%
+  count(variety, sort=TRUE)
+
+```
+
+
+Let's explore relations between total_cup_points and altitude_mean_meters
+
+```{r}
+coffee_ratings_clean%>%ggplot(
+  aes(x=altitude_mean_meters, y=total_cup_points)
+)+
+  geom_point()
+
+coffee_ratings_clean%>%ggplot(
+  aes(x=altitude_mean_meters, y=total_cup_points)
+)+
+  geom_smooth(method = lm)
+
+```
+
+
+
