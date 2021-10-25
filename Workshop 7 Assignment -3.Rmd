@@ -93,7 +93,7 @@ coffee_ratings_clean%>%ggplot(
   aes(x=altitude_mean_meters, y=total_cup_points)
 )+
   geom_smooth(method = lm)
-
+# h
 ```
 
 
