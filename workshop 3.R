@@ -126,6 +126,7 @@ survey_USD_summars<-survey_USD%>%
 survey_USD%>%
   parse_number(how_old_are_you)
 
+
 class(survey_USD$how_old_are_you)
 
 
