@@ -97,4 +97,16 @@ coffee_ratings_clean%>%ggplot(
 ```
 
 
+Linear Model (predicting total cup points based on altitude mean meters and save it to result variable (res))
+```{r}
+library(tidyverse)
+
+library(broom)
+
+res<-lm(total_cup_points~altitude_mean_meters+number_of_bags+acidity, data=coffee_ratings_clean)
+
+summary(res)
+
+
+```
 
